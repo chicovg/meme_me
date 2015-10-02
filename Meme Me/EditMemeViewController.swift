@@ -20,6 +20,8 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     
     var activeMeme: Meme!
     var edited = false
+    var activeTextField: UITextField?
+    var viewShifted = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,10 +85,12 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         } else if textField == memeTextBottom && textField.text == "BOTTOM" {
             textField.text = ""
         }
+        activeTextField = textField
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        activeTextField = nil
         return true
     }
     
@@ -98,16 +102,15 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
             NSFontAttributeName : UIFont(name:"HelveticaNeue-CondensedBlack", size: 40.0)!,
             NSStrokeColorAttributeName : UIColor.blackColor(),
             NSForegroundColorAttributeName : UIColor.whiteColor(),
-            NSStrokeWidthAttributeName : -1.0,
+            NSStrokeWidthAttributeName : -1.0
         ]
         
-        memeTextTop.text = "TOP"
-        memeTextBottom.text = "BOTTOM"
-        
         memeTextTop.defaultTextAttributes = textAttributes
-        memeTextBottom.defaultTextAttributes = textAttributes
-        
+        memeTextTop.textAlignment = NSTextAlignment.Center
         memeTextTop.delegate = self
+        
+        memeTextBottom.defaultTextAttributes = textAttributes
+        memeTextBottom.textAlignment = NSTextAlignment.Center
         memeTextBottom.delegate = self
     }
     
@@ -128,10 +131,27 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     }
     
     func keyboardWillShow(notification: NSNotification) {
-        self.view.frame.origin.y -= getKeyboardHeight(notification)
+        let keyboardHeight = getKeyboardHeight(notification)
+        var aRect : CGRect = self.view.frame
+        aRect.size.height -= keyboardHeight
+        if let activeTextField = activeTextField {
+            if (!CGRectContainsPoint(aRect, activeTextField.frame.origin)) {
+                self.view.frame.origin.y -= keyboardHeight
+                viewShifted = true
+            }
+        }
+        
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        if (viewShifted) {
+            self.view.frame.origin.y += getKeyboardHeight(notification)
+            viewShifted = false
+        }
     }
     
     private func getKeyboardHeight(notification: NSNotification) -> CGFloat {
+        memeTextBottom.touchInside
         let userInfo = notification.userInfo
         let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
         return keyboardSize.CGRectValue().height
@@ -139,10 +159,12 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     
     private func subscribeToKeyboardNotifications() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
     }
     
     private func unsubscribeToKeyboardNotifications() {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
     }
 }
 
