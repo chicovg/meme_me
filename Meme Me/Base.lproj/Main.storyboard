@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="TDL-aK-cso">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="TDL-aK-cso">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -77,8 +77,16 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="oG1-zg-dVg">
-                        <barButtonItem key="leftBarButtonItem" systemItem="action" id="ySO-3A-Bwp"/>
-                        <barButtonItem key="rightBarButtonItem" title="Cancel" id="zWu-zI-BCn"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="action" id="ySO-3A-Bwp">
+                            <connections>
+                                <action selector="shareMeme:" destination="BYZ-38-t0r" id="BSg-6A-dg9"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Cancel" id="zWu-zI-BCn">
+                            <connections>
+                                <action selector="cancelMeme:" destination="BYZ-38-t0r" id="owb-k4-OOD"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="getImageFromAlbumButton" destination="298-N2-0n7" id="KyI-5Y-Bfw"/>
@@ -86,6 +94,7 @@
                         <outlet property="memeImage" destination="Pk4-WI-8TM" id="gqS-lT-bUa"/>
                         <outlet property="memeTextBottom" destination="uRf-Xj-aNt" id="jAQ-nQ-oXc"/>
                         <outlet property="memeTextTop" destination="grZ-pg-1ez" id="el8-WN-ZEx"/>
+                        <outlet property="shareMemeButton" destination="ySO-3A-Bwp" id="CUT-sv-I7K"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

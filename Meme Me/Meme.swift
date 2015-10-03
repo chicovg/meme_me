@@ -13,4 +13,5 @@ struct Meme {
     var textTop: String
     var textBottom: String
     var image: UIImage
+    var combinedImage: UIImage
 }

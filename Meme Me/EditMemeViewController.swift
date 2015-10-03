@@ -17,6 +17,7 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     
     @IBOutlet weak var getImageFromCameraButton: UIBarButtonItem!
     @IBOutlet weak var getImageFromAlbumButton: UIBarButtonItem!
+    @IBOutlet weak var shareMemeButton: UIBarButtonItem!
     
     var activeMeme: Meme!
     var edited = false
@@ -26,7 +27,7 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        setUpMemeText()
+        setUpTextFields()
         setUpActionButtons()
     }
 
@@ -72,9 +73,26 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         self.presentViewController(photoLibraryController, animated: true, completion: nil)
     }
     
+    @IBAction func shareMeme(sender: UIBarButtonItem) {
+        let combinedImage: UIImage = getCombinedMemeImage()
+        
+        
+        let activityVC = UIActivityViewController(activityItems: [combinedImage], applicationActivities: [])
+        self.presentViewController(activityVC, animated: true, completion: {
+            Void in
+            var memeToShare = Meme(textTop: self.memeTextTop!.text!, textBottom: self.memeTextBottom!.text!, image: self.memeImage!.image!, combinedImage: combinedImage)
+        })  
+    }
+    
+    @IBAction func cancelMeme(sender: UIBarButtonItem) {
+        resetMeme()
+    }
+    
+    
     // MARK: UIImagePickerControllerDelegate
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
         memeImage.image = image
+        shareMemeButton.enabled = true
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -97,7 +115,7 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     // MARK: Helper Methods
     
     /* Sets up meme text styles */
-    private func setUpMemeText(){
+    private func setUpTextFields(){
         let textAttributes = [
             NSFontAttributeName : UIFont(name:"HelveticaNeue-CondensedBlack", size: 40.0)!,
             NSStrokeColorAttributeName : UIColor.blackColor(),
@@ -114,6 +132,14 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         memeTextBottom.delegate = self
     }
     
+    /* Reset meme fields */
+    private func resetMeme(){
+        memeTextTop.text = "TOP"
+        memeTextBottom.text = "BOTTOM"
+        memeImage.image = nil
+        shareMemeButton.enabled = false
+    }
+    
     /* Sets up Action buttons based on available features */
     private func setUpActionButtons(){
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
@@ -127,9 +153,10 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         } else {
             getImageFromAlbumButton.enabled = false
         }
-        
     }
     
+    /* triggered when keyboard is about to show,
+        moves the view up if active text view is covered */
     func keyboardWillShow(notification: NSNotification) {
         let keyboardHeight = getKeyboardHeight(notification)
         var aRect : CGRect = self.view.frame
@@ -143,6 +170,8 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         
     }
     
+    /* triggered when keyboard is about to be hidden,
+        moves the view down if it was previously moved up */
     func keyboardWillHide(notification: NSNotification) {
         if (viewShifted) {
             self.view.frame.origin.y += getKeyboardHeight(notification)
@@ -150,6 +179,7 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         }
     }
     
+    /* Determine the height of the keyboard */
     private func getKeyboardHeight(notification: NSNotification) -> CGFloat {
         memeTextBottom.touchInside
         let userInfo = notification.userInfo
@@ -157,14 +187,25 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         return keyboardSize.CGRectValue().height
     }
     
+    /* subscribes to necessary keyboard notiications */
     private func subscribeToKeyboardNotifications() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
     }
     
+    /* unsubscribes to keyboard notiications */
     private func unsubscribeToKeyboardNotifications() {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    /* get image combining meme image and text */
+    private func getCombinedMemeImage() -> UIImage {
+        UIGraphicsBeginImageContext(self.view.frame.size)
+        self.view.drawViewHierarchyInRect(self.view.frame, afterScreenUpdates: true)
+        let image : UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 }
 
