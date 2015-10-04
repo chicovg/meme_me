@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="TDL-aK-cso">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="TDL-aK-cso">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -18,12 +18,12 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Pk4-WI-8TM">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="493"/>
                                 <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="TOP" textAlignment="center" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="grZ-pg-1ez">
-                                <rect key="frame" x="20" y="92" width="560" height="30"/>
+                                <rect key="frame" x="20" y="104" width="560" height="30"/>
                                 <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -33,6 +33,9 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l9w-Sa-6R4">
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>
                                 <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="CWe-bR-MD4"/>
+                                </constraints>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="qr1-pO-VJb"/>
                                     <barButtonItem systemItem="camera" id="tDD-yk-x7o">
@@ -50,7 +53,7 @@
                                 </items>
                             </toolbar>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="BOTTOM" textAlignment="center" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="uRf-Xj-aNt">
-                                <rect key="frame" x="20" y="496" width="560" height="30"/>
+                                <rect key="frame" x="20" y="486" width="560" height="30"/>
                                 <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -66,15 +69,23 @@
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="l9w-Sa-6R4" secondAttribute="bottom" id="EHH-u9-Rqr"/>
                             <constraint firstItem="Pk4-WI-8TM" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottomMargin" id="GRG-J2-6lW"/>
                             <constraint firstItem="Pk4-WI-8TM" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="ITG-CS-T1L"/>
+                            <constraint firstItem="Pk4-WI-8TM" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="LWd-aw-7hj"/>
                             <constraint firstItem="uRf-Xj-aNt" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Rjb-PL-yQh"/>
-                            <constraint firstItem="l9w-Sa-6R4" firstAttribute="top" secondItem="uRf-Xj-aNt" secondAttribute="bottom" constant="30" id="SDj-T2-xJS"/>
+                            <constraint firstItem="l9w-Sa-6R4" firstAttribute="top" secondItem="uRf-Xj-aNt" secondAttribute="bottom" constant="40" id="SDj-T2-xJS"/>
+                            <constraint firstItem="l9w-Sa-6R4" firstAttribute="top" secondItem="Pk4-WI-8TM" secondAttribute="bottom" constant="-1" id="Xv7-J2-fle"/>
                             <constraint firstItem="Pk4-WI-8TM" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="aJN-Cc-pBY"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Pk4-WI-8TM" secondAttribute="trailing" constant="-20" id="aaV-Jm-bTU"/>
-                            <constraint firstItem="grZ-pg-1ez" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="28" id="leR-yI-ghu"/>
+                            <constraint firstItem="grZ-pg-1ez" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="40" id="leR-yI-ghu"/>
                             <constraint firstItem="grZ-pg-1ez" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="mGg-a0-NIO"/>
                             <constraint firstAttribute="trailingMargin" secondItem="l9w-Sa-6R4" secondAttribute="trailing" constant="-20" id="rZb-nU-4WO"/>
                             <constraint firstItem="l9w-Sa-6R4" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="xsk-5y-tv6"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="GRG-J2-6lW"/>
+                                <exclude reference="ITG-CS-T1L"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="oG1-zg-dVg">
                         <barButtonItem key="leftBarButtonItem" systemItem="action" id="ySO-3A-Bwp">
