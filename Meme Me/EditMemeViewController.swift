@@ -20,8 +20,10 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     @IBOutlet weak var shareMemeButton: UIBarButtonItem!
     
     var activeMemeImage: UIImage?
-    var edited = false
     var activeTextField: UITextField?
+    var imageRect: CGRect?
+    
+    var edited = false
     var viewShifted = false
     
     override func viewDidLoad() {
@@ -64,7 +66,7 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         let mediaTypes:[String] = [kUTTypeImage as NSString as String]
         cameraController.mediaTypes = mediaTypes
         
-        self.presentViewController(cameraController, animated: true, completion: nil)
+        presentViewController(cameraController, animated: true, completion: nil)
     }
 
     @IBAction func getImageFromPhotoAlbum(sender: UIBarButtonItem) {
@@ -75,14 +77,14 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         let mediaTypes:[String] = [kUTTypeImage as NSString as String]
         photoLibraryController.mediaTypes = mediaTypes
         
-        self.presentViewController(photoLibraryController, animated: true, completion: nil)
+        presentViewController(photoLibraryController, animated: true, completion: nil)
     }
     
     @IBAction func shareMeme(sender: UIBarButtonItem) {
         let combinedImage: UIImage = getCombinedMemeImage()
         
         let activityVC = UIActivityViewController(activityItems: [combinedImage], applicationActivities: [])
-        self.presentViewController(activityVC, animated: true, completion: {
+        presentViewController(activityVC, animated: true, completion: {
             Void in
             let newMeme = Meme(textTop: self.memeTextTop!.text!, textBottom: self.memeTextBottom!.text!, image: self.memeImage!.image!, combinedImage: combinedImage)
             (UIApplication.sharedApplication().delegate as! AppDelegate).savedMemes.append(newMeme)
@@ -98,8 +100,9 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
         activeMemeImage = image
         setMemeImage()
+        setMemeTextPositions()
         shareMemeButton.enabled = true
-        self.dismissViewControllerAnimated(true, completion: nil)
+        dismissViewControllerAnimated(true, completion: nil)
     }
     
     // MARK: UITextFieldDelegate
@@ -118,33 +121,33 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         return true
     }
     
-    /* triggered when keyboard is about to show,
-    moves the view up if active text view is covered */
+    /** triggered when keyboard is about to show,
+        moves the view up if active text view is covered */
     func keyboardWillShow(notification: NSNotification) {
         let keyboardHeight = getKeyboardHeight(notification)
-        var aRect : CGRect = self.view.frame
+        var aRect : CGRect = view.frame
         aRect.size.height -= keyboardHeight
         if let activeTextField = activeTextField {
             if (!CGRectContainsPoint(aRect, activeTextField.frame.origin)) {
-                self.view.frame.origin.y -= keyboardHeight
+                view.frame.origin.y -= keyboardHeight
                 viewShifted = true
             }
         }
         
     }
     
-    /* triggered when keyboard is about to be hidden,
-    moves the view down if it was previously moved up */
+    /** triggered when keyboard is about to be hidden,
+        moves the view down if it was previously moved up */
     func keyboardWillHide(notification: NSNotification) {
         if (viewShifted) {
-            self.view.frame.origin.y += getKeyboardHeight(notification)
+            view.frame.origin.y = 0
             viewShifted = false
         }
     }
     
     // MARK: Helper Methods
     
-    /* Sets up meme text styles */
+    /** Sets up meme text styles */
     private func setUpTextFields(){
         let textAttributes = [
             NSFontAttributeName : UIFont(name:"HelveticaNeue-CondensedBlack", size: 40.0)!,
@@ -162,16 +165,17 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         memeTextBottom.delegate = self
     }
     
-    /* Reset meme fields */
+    /** Reset meme fields */
     private func resetMeme(){
         memeTextTop.text = "TOP"
         memeTextBottom.text = "BOTTOM"
         memeImage.image = nil
         activeMemeImage = nil
+        imageRect = nil
         shareMemeButton.enabled = false
     }
     
-    /* Sets up Action buttons based on available features */
+    /** Sets up Action buttons based on available features */
     private func setUpActionButtons(){
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
             getImageFromCameraButton.enabled = true
@@ -186,7 +190,7 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         }
     }
     
-    /* Determine the height of the keyboard */
+    /** Determine the height of the keyboard */
     private func getKeyboardHeight(notification: NSNotification) -> CGFloat {
         memeTextBottom.touchInside
         let userInfo = notification.userInfo
@@ -194,22 +198,22 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         return keyboardSize.CGRectValue().height
     }
     
-    /* subscribes to necessary keyboard notiications */
+    /** subscribes to necessary keyboard notiications */
     private func subscribeToKeyboardNotifications() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
     }
     
-    /* unsubscribes to keyboard notiications */
+    /** unsubscribes to keyboard notiications */
     private func unsubscribeToKeyboardNotifications() {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
     }
     
-    /* get scaled image */
+    /** get scaled image */
     private func setMemeImage() {
         if let image = activeMemeImage {
-            let targetRect = self.view.frame
+            let targetRect = view.frame
             
             var width = targetRect.size.width
             var height = targetRect.size.height
@@ -227,19 +231,28 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
             rect.size.width  = width;
             rect.size.height = height;
     
-            rect.origin.x = self.view.frame.width/2 - width/2
-            rect.origin.y = self.view.frame.height/2 - height/2
+            rect.origin.x = view.frame.width/2 - width/2
+            rect.origin.y = view.frame.height/2 - height/2
             
             image.drawInRect(rect)
             memeImage.image = UIGraphicsGetImageFromCurrentImageContext();
+            imageRect = rect
             UIGraphicsEndImageContext();
         }
     }
     
-    /* get image combining meme image and text */
+    private func setMemeTextPositions() {
+        if let imageRect = imageRect {
+            print("x: \(imageRect.origin.x) y: \(imageRect.origin.y)")
+        } else {
+            
+        }
+    }
+    
+    /** get image combining meme image and text */
     private func getCombinedMemeImage() -> UIImage {
-        UIGraphicsBeginImageContext(self.memeImage.frame.size)
-        self.view.drawViewHierarchyInRect(self.memeImage.frame, afterScreenUpdates: true)
+        UIGraphicsBeginImageContext(memeImage.frame.size)
+        view.drawViewHierarchyInRect(memeImage.frame, afterScreenUpdates: true)
         let image : UIImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image
