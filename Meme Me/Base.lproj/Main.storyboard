@@ -18,14 +18,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Pk4-WI-8TM">
-                                <rect key="frame" x="0.0" y="64" width="600" height="493"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="492"/>
                                 <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="TOP" textAlignment="center" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="grZ-pg-1ez">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="TOP" textAlignment="center" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="grZ-pg-1ez">
                                 <rect key="frame" x="20" y="104" width="560" height="30"/>
                                 <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="J2M-3t-sE9"/>
+                                </constraints>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="40"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters"/>
@@ -52,13 +55,22 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="tga-Jx-rhC"/>
                                 </items>
                             </toolbar>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="BOTTOM" textAlignment="center" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="uRf-Xj-aNt">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="BOTTOM" textAlignment="center" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="uRf-Xj-aNt">
                                 <rect key="frame" x="20" y="486" width="560" height="30"/>
                                 <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="ZgK-CX-bGL"/>
+                                    <constraint firstAttribute="height" constant="30" id="fci-qx-GZd"/>
+                                </constraints>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="40"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="fci-qx-GZd"/>
+                                    </mask>
+                                </variation>
                             </textField>
                         </subviews>
                         <animations/>
@@ -72,7 +84,7 @@
                             <constraint firstItem="Pk4-WI-8TM" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="LWd-aw-7hj"/>
                             <constraint firstItem="uRf-Xj-aNt" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Rjb-PL-yQh"/>
                             <constraint firstItem="l9w-Sa-6R4" firstAttribute="top" secondItem="uRf-Xj-aNt" secondAttribute="bottom" constant="40" id="SDj-T2-xJS"/>
-                            <constraint firstItem="l9w-Sa-6R4" firstAttribute="top" secondItem="Pk4-WI-8TM" secondAttribute="bottom" constant="-1" id="Xv7-J2-fle"/>
+                            <constraint firstItem="l9w-Sa-6R4" firstAttribute="top" secondItem="Pk4-WI-8TM" secondAttribute="bottom" id="Xv7-J2-fle"/>
                             <constraint firstItem="Pk4-WI-8TM" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="aJN-Cc-pBY"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Pk4-WI-8TM" secondAttribute="trailing" constant="-20" id="aaV-Jm-bTU"/>
                             <constraint firstItem="grZ-pg-1ez" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="40" id="leR-yI-ghu"/>

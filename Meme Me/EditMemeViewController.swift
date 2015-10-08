@@ -26,6 +26,8 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     var edited = false
     var viewShifted = false
     
+    let kMemeTextMargin: CGFloat = 20
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -55,6 +57,7 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         super.viewDidLayoutSubviews()
         
         setMemeImage()
+        setMemeTextPositions()
     }
     
     
@@ -213,7 +216,7 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     /** get scaled image */
     private func setMemeImage() {
         if let image = activeMemeImage {
-            let targetRect = view.frame
+            let targetRect = memeImage.frame
             
             var width = targetRect.size.width
             var height = targetRect.size.height
@@ -231,8 +234,10 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
             rect.size.width  = width;
             rect.size.height = height;
     
-            rect.origin.x = view.frame.width/2 - width/2
-            rect.origin.y = view.frame.height/2 - height/2
+            rect.origin.x = memeImage.frame.width/2 - width/2
+            rect.origin.y = memeImage.frame.height/2 - height/2
+            
+            print("rect x: \(memeImage.frame.origin.x) y: \(memeImage.frame.origin.y)")
             
             image.drawInRect(rect)
             memeImage.image = UIGraphicsGetImageFromCurrentImageContext();
@@ -244,9 +249,13 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     private func setMemeTextPositions() {
         if let imageRect = imageRect {
             print("x: \(imageRect.origin.x) y: \(imageRect.origin.y)")
+            memeTextTop.frame.origin.y = topLayoutGuide.length + imageRect.origin.y + kMemeTextMargin
+            memeTextBottom.frame.origin.y = topLayoutGuide.length + imageRect.origin.y + imageRect.height - memeTextBottom.frame.height - kMemeTextMargin
         } else {
-            
+            memeTextTop.frame.origin.y = topLayoutGuide.length + kMemeTextMargin
+            memeTextBottom.frame.origin.y = view.frame.height - (navigationController?.toolbar.frame.height)! - kMemeTextMargin - memeTextBottom.frame.height
         }
+        print("top-height: \(memeTextTop.frame.height) top-y: \(memeTextTop.frame.origin.y) bottom-y: \(memeTextBottom.frame.origin.y)")
     }
     
     /** get image combining meme image and text */
