@@ -8,6 +8,10 @@
 
 import UIKit
 
+
+let kUnwindToTableSeque = "unwindToTableViewSegue"
+let kUnwindToCollectionSeque = "unwindToCollectionViewSegue"
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -16,6 +20,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        
+        /*window?.rootViewController = initialViewController
+        window?.makeKeyAndVisible()
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if savedMemes.count == 0 {
+            window?.rootViewController = storyboard.instantiateViewControllerWithIdentifier("EditMemeViewController") 
+        } else {
+            
+        }*/
+        let tstMeme1: Meme = Meme(textTop: "TEST TEXT TOP1", textBottom: "TEST TEXT BOTTOM1", image: UIImage(named: "LaunchImage")!, combinedImage: UIImage(named: "LaunchImage")!)
+        let tstMeme2: Meme = Meme(textTop: "TEST TEXT TOP2", textBottom: "TEST TEXT BOTTOM2", image: UIImage(named: "LaunchImage")!, combinedImage: UIImage(named: "LaunchImage")!)
+        let tstMeme3: Meme = Meme(textTop: "TEST TEXT TOP3", textBottom: "TEST TEXT BOTTOM3", image: UIImage(named: "LaunchImage")!, combinedImage: UIImage(named: "LaunchImage")!)
+        savedMemes.append(tstMeme1)
+        savedMemes.append(tstMeme2)
+        savedMemes.append(tstMeme3)
         return true
     }
 

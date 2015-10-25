@@ -25,8 +25,11 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     
     var edited = false
     var viewShifted = false
+    var unwindSeque: String?
     
     let kMemeTextMargin: CGFloat = 20
+    let kUnwindToTableSeque = "unwindToTableViewSegue"
+    let kUnwindToCollectionSeque = "unwindToCollectionViewSegue"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,15 +90,19 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         let combinedImage: UIImage = getCombinedMemeImage()
         
         let activityVC = UIActivityViewController(activityItems: [combinedImage], applicationActivities: [])
-        presentViewController(activityVC, animated: true, completion: {
-            Void in
+        activityVC.completionWithItemsHandler = {
+            (activity, success, items, error) in
             let newMeme = Meme(textTop: self.memeTextTop!.text!, textBottom: self.memeTextBottom!.text!, image: self.memeImage!.image!, combinedImage: combinedImage)
             (UIApplication.sharedApplication().delegate as! AppDelegate).savedMemes.append(newMeme)
-        })
+            self.returnToPreviousView()
+        }
+        
+        presentViewController(activityVC, animated: true, completion: nil)
     }
     
     @IBAction func cancelMeme(sender: UIBarButtonItem) {
         resetMeme()
+        returnToPreviousView()
     }
     
     
@@ -244,6 +251,7 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         }
     }
     
+    /** move top top and bottom text to within image */
     private func setMemeTextPositions() {
         if let imageRect = imageRect {
             memeTextTop.frame.origin.y = topLayoutGuide.length + imageRect.origin.y + kMemeTextMargin
@@ -256,11 +264,22 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     
     /** get image combining meme image and text */
     private func getCombinedMemeImage() -> UIImage {
-        UIGraphicsBeginImageContext(memeImage.frame.size)
-        view.drawViewHierarchyInRect(memeImage.frame, afterScreenUpdates: true)
-        let image : UIImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image
+        if let imageRect = imageRect {
+            // TODO get actual position of image
+            //let rect = CGRectMake(imageRect.origin.x, imageRect.origin.y - topLayoutGuide.length, imageRect.width, imageRect.height)
+            UIGraphicsBeginImageContext(imageRect.size)
+            view.drawViewHierarchyInRect(imageRect, afterScreenUpdates: true)
+            let image : UIImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            return image
+        }
+        return UIImage()
+    }
+    
+    private func returnToPreviousView(){
+        if let unwindSeque = unwindSeque {
+            performSegueWithIdentifier(unwindSeque, sender: nil)
+        }
     }
 
 }
