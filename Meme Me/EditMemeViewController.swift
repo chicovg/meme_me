@@ -265,12 +265,18 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     /** get image combining meme image and text */
     private func getCombinedMemeImage() -> UIImage {
         if let imageRect = imageRect {
-            // TODO get actual position of image
-            //let rect = CGRectMake(imageRect.origin.x, imageRect.origin.y - topLayoutGuide.length, imageRect.width, imageRect.height)
-            UIGraphicsBeginImageContext(imageRect.size)
-            view.drawViewHierarchyInRect(imageRect, afterScreenUpdates: true)
+            // TODO get actual position of image ?????? stumped
+            let rect = CGRectMake(imageRect.origin.x, imageRect.origin.y - topLayoutGuide.length, imageRect.width, imageRect.height)
+            
+            
+            let snapView = view.resizableSnapshotViewFromRect(imageRect, afterScreenUpdates: true, withCapInsets: UIEdgeInsetsZero)
+            
+            UIGraphicsBeginImageContextWithOptions(snapView.bounds.size, true, 0)
+            snapView.drawViewHierarchyInRect(rect, afterScreenUpdates: true)
+            
             let image : UIImage = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
+            
             return image
         }
         return UIImage()
