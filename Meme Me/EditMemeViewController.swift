@@ -254,8 +254,8 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     /** move top top and bottom text to within image */
     private func setMemeTextPositions() {
         if let imageRect = imageRect {
-            memeTextTop.frame.origin.y = topLayoutGuide.length + imageRect.origin.y + kMemeTextMargin
-            memeTextBottom.frame.origin.y = topLayoutGuide.length + imageRect.origin.y + imageRect.height - memeTextBottom.frame.height - kMemeTextMargin
+            memeTextTop.frame.origin.y =  imageRect.origin.y + kMemeTextMargin
+            memeTextBottom.frame.origin.y = imageRect.origin.y + imageRect.height - memeTextBottom.frame.height - kMemeTextMargin
         } else {
             memeTextTop.frame.origin.y = topLayoutGuide.length + kMemeTextMargin
             memeTextBottom.frame.origin.y = view.frame.height - (navigationController?.toolbar.frame.height)! - kMemeTextMargin - memeTextBottom.frame.height
@@ -265,14 +265,20 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     /** get image combining meme image and text */
     private func getCombinedMemeImage() -> UIImage {
         if let imageRect = imageRect {
-            // TODO get actual position of image ?????? stumped
-            let rect = CGRectMake(imageRect.origin.x, imageRect.origin.y - topLayoutGuide.length, imageRect.width, imageRect.height)
-            
-            
             let snapView = view.resizableSnapshotViewFromRect(imageRect, afterScreenUpdates: true, withCapInsets: UIEdgeInsetsZero)
+            snapView.frame.origin.x = imageRect.origin.x
+            snapView.frame.origin.y = imageRect.origin.y
+            
+            print("memeImage: x:\(memeImage.frame.origin.x) y:\(memeImage.frame.origin.y) h:\(memeImage.frame.height) w:\(memeImage.frame.width)")
+            
+            print("imageRect: x:\(imageRect.origin.x) y:\(imageRect.origin.y) h:\(imageRect.height) w:\(imageRect.width)")
+            
+            print("snapView frame: x:\(snapView.frame.origin.x) y:\(snapView.frame.origin.y) h:\(snapView.frame.height) w:\(snapView.frame.width)")
+            
+            print("snapView bounds: x:\(snapView.bounds.origin.x) y:\(snapView.bounds.origin.y) h:\(snapView.bounds.height) w:\(snapView.bounds.width)")
             
             UIGraphicsBeginImageContextWithOptions(snapView.bounds.size, true, 0)
-            snapView.drawViewHierarchyInRect(rect, afterScreenUpdates: true)
+            snapView.drawViewHierarchyInRect(snapView.frame, afterScreenUpdates: true)
             
             let image : UIImage = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
