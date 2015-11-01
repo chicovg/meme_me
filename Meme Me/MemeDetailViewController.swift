@@ -18,6 +18,9 @@ class MemeDetailViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        memeImage.autoresizesSubviews = false
+        memeImage.contentMode = UIViewContentMode.ScaleAspectFit
+        
         if let meme = meme {
             memeImage.image = meme.combinedImage
         }

@@ -37,6 +37,7 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
         setUpTextFields()
         setUpActionButtons()
         resetMeme()
+        unwindSeque = kUnwindToTableSeque
     }
 
     override func didReceiveMemoryWarning() {
@@ -265,27 +266,31 @@ class EditMemeViewController: UIViewController, UITextFieldDelegate, UIImagePick
     /** get image combining meme image and text */
     private func getCombinedMemeImage() -> UIImage {
         if let imageRect = imageRect {
-            let snapView = view.resizableSnapshotViewFromRect(imageRect, afterScreenUpdates: true, withCapInsets: UIEdgeInsetsZero)
-            snapView.frame.origin.x = imageRect.origin.x
-            snapView.frame.origin.y = imageRect.origin.y
-            
-            print("memeImage: x:\(memeImage.frame.origin.x) y:\(memeImage.frame.origin.y) h:\(memeImage.frame.height) w:\(memeImage.frame.width)")
-            
-            print("imageRect: x:\(imageRect.origin.x) y:\(imageRect.origin.y) h:\(imageRect.height) w:\(imageRect.width)")
-            
-            print("snapView frame: x:\(snapView.frame.origin.x) y:\(snapView.frame.origin.y) h:\(snapView.frame.height) w:\(snapView.frame.width)")
-            
-            print("snapView bounds: x:\(snapView.bounds.origin.x) y:\(snapView.bounds.origin.y) h:\(snapView.bounds.height) w:\(snapView.bounds.width)")
-            
-            UIGraphicsBeginImageContextWithOptions(snapView.bounds.size, true, 0)
-            snapView.drawViewHierarchyInRect(snapView.frame, afterScreenUpdates: true)
+            UIGraphicsBeginImageContextWithOptions(view.bounds.size, true, UIScreen.mainScreen().scale)
+            view.drawViewHierarchyInRect(CGRectMake(0, 0, view.bounds.width, view.bounds.height), afterScreenUpdates: true)
             
             let image : UIImage = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
             
-            return image
+            // got image of entire screen, now crop it to show meme only
+            return getCroppedImage(image, cropRect: imageRect)
         }
         return UIImage()
+    }
+    
+    /** returns the specified image cropped to the sepcified rectangle **/
+    private func getCroppedImage(image: UIImage, cropRect: CGRect) -> UIImage {
+        UIGraphicsBeginImageContext(cropRect.size)
+        let context = UIGraphicsGetCurrentContext()
+        
+        let drawRect = CGRectMake(-cropRect.origin.x, -cropRect.origin.y, image.size.width, image.size.height)
+        CGContextClipToRect(context, CGRectMake(0, 0, cropRect.size.width, cropRect.size.height))
+        
+        image.drawInRect(drawRect)
+        let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext();
+        
+        return croppedImage
     }
     
     private func returnToPreviousView(){
